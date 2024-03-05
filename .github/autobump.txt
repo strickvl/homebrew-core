@@ -1324,6 +1324,7 @@ qbe
 qbs
 qcachegrind
 qd
+qemu
 qjackctl
 qpdf
 qpid-proton
