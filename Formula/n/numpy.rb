@@ -22,9 +22,7 @@ class Numpy < Formula
   end
 
   depends_on "gcc" => :build # for gfortran
-  depends_on "libcython" => :build
   depends_on "meson" => :build
-  depends_on "meson-python" => :build
   depends_on "ninja" => :build
   depends_on "python@3.11" => [:build, :test]
   depends_on "python@3.12" => [:build, :test]
@@ -39,16 +37,11 @@ class Numpy < Formula
   end
 
   def install
-    ENV.prepend_path "PATH", Formula["libcython"].opt_libexec/"bin"
-
     pythons.each do |python|
       python3 = python.opt_libexec/"bin/python"
-      site_packages = Language::Python.site_packages(python3)
-      ENV.prepend_path "PYTHONPATH", Formula["libcython"].opt_libexec/site_packages
-
-      system python3, "-m", "pip", "install", *std_pip_args, ".",
-                                   "-Csetup-args=-Dblas=openblas",
-                                   "-Csetup-args=-Dlapack=openblas"
+      system python3, "-m", "pip", "install", "-Csetup-args=-Dblas=openblas",
+                                              "-Csetup-args=-Dlapack=openblas",
+                                               *std_pip_args(build_isolation: true), "."
     end
   end
 
